@@ -17,16 +17,15 @@ Hey dude! Help me out for a couple of :beers: or a :coffee:!
 
 ## Options
 
-| ----------------- | --------- | ------------ | ------------------------------------------- |
+
 | Name              | Type      | Requirement  | Description                                 |
-| ----------------- | ------- - | ------------ | ------------------------------------------- |
+| ----------------- | --------- | ------------ | ------------------------------------------- |
 | type              | string    | **Required** | `custom:template-card`                      |
 | card              | object    | **Required** | Card to be templated                        |
 | entity            | string    | **Optional** | Accesible in code as `entity`               |
 | triggers          | string[]  | **Optional** | Entity list triggering updates              |
 | variables         | dictionary| **Optional** | Accessible in code as `variables'           |
 | templates         | string[]  | **Optional** | Inherited merged templates                  |
-| ----------------- | --------- | ------------ | ------------------------------------------- |
 
 ## Card
 
