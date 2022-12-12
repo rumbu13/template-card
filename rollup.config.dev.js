@@ -4,13 +4,10 @@ import babel from 'rollup-plugin-babel';
 import serve from 'rollup-plugin-serve';
 import { terser } from 'rollup-plugin-terser';
 import json from '@rollup/plugin-json';
-import ignore from './rollup-plugins/ignore';
-import { ignoreTextfieldFiles } from './elements/ignore/textfield';
-import { ignoreSelectFiles } from './elements/ignore/select';
-import { ignoreSwitchFiles } from './elements/ignore/switch';
+
 
 export default {
-  input: ['src/boilerplate-card.ts'],
+  input: ['src/template-card.ts'],
   output: {
     dir: './dist',
     format: 'es',
@@ -25,15 +22,12 @@ export default {
     terser(),
     serve({
       contentBase: './dist',
-      host: '0.0.0.0',
+      host: '127.0.0.1',
       port: 5000,
       allowCrossOrigin: true,
       headers: {
         'Access-Control-Allow-Origin': '*',
       },
-    }),
-    ignore({
-      files: [...ignoreTextfieldFiles, ...ignoreSelectFiles, ...ignoreSwitchFiles].map((file) => require.resolve(file)),
-    }),
+    }),    
   ],
 };

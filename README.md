@@ -1,6 +1,6 @@
-# Boilerplate Card by [@iantrich](https://www.github.com/iantrich)
+# Template Card by [@rumbu13](https://www.github.com/rumbu13)
 
-A community driven boilerplate of best practices for Home Assistant Lovelace custom cards
+A community driven template of best practices for Home Assistant Lovelace custom cards
 
 [![GitHub Release][releases-shield]][releases]
 [![License][license-shield]](LICENSE.md)
@@ -9,111 +9,99 @@ A community driven boilerplate of best practices for Home Assistant Lovelace cus
 ![Project Maintenance][maintenance-shield]
 [![GitHub Activity][commits-shield]][commits]
 
-[![Discord][discord-shield]][discord]
-[![Community Forum][forum-shield]][forum]
-
 ## Support
 
 Hey dude! Help me out for a couple of :beers: or a :coffee:!
 
-[![coffee](https://www.buymeacoffee.com/assets/img/custom_images/black_img.png)](https://www.buymeacoffee.com/zJtVxUAgH)
+[![coffee](https://www.buymeacoffee.com/assets/img/custom_images/black_img.png)](https://www.buymeacoffee.com/rumbuT)
 
 ## Options
 
-| Name              | Type    | Requirement  | Description                                 | Default             |
-| ----------------- | ------- | ------------ | ------------------------------------------- | ------------------- |
-| type              | string  | **Required** | `custom:boilerplate-card`                   |
-| name              | string  | **Optional** | Card name                                   | `Boilerplate`       |
-| show_error        | boolean | **Optional** | Show what an error looks like for the card  | `false`             |
-| show_warning      | boolean | **Optional** | Show what a warning looks like for the card | `false`             |
-| entity            | string  | **Optional** | Home Assistant entity ID.                   | `none`              |
-| tap_action        | object  | **Optional** | Action to take on tap                       | `action: more-info` |
-| hold_action       | object  | **Optional** | Action to take on hold                      | `none`              |
-| double_tap_action | object  | **Optional** | Action to take on double tap                | `none`              |
+| Name              | Type    | Requirement  | Description                                 |
+| ----------------- | ------- | ------------ | ------------------------------------------- |
+| type              | string  | **Required** | `custom:template-card`                      |
+| card              | object  | **Required** | Card name                                   |
+| entity            | string  | **Optional** | This can be used as variable `entity`       |
+| triggers          | string[]| **Optional** | Show what a warning looks like for the card |
+| variables         | string[]| **Optional** | These can be used as `variables.name`       |
+| templates         | string[]| **Optional** | Inherited templates                         |
 
-## Action Options
+## Card
 
-| Name            | Type   | Requirement  | Description                                                                                                                            | Default     |
-| --------------- | ------ | ------------ | -------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
-| action          | string | **Required** | Action to perform (more-info, toggle, call-service, navigate url, none)                                                                | `more-info` |
-| navigation_path | string | **Optional** | Path to navigate to (e.g. /lovelace/0/) when action defined as navigate                                                                | `none`      |
-| url             | string | **Optional** | URL to open on click when action is url. The URL will open in a new tab                                                                | `none`      |
-| service         | string | **Optional** | Service to call (e.g. media_player.media_play_pause) when action defined as call-service                                               | `none`      |
-| service_data    | object | **Optional** | Service data to include (e.g. entity_id: media_player.bedroom) when action defined as call-service                                     | `none`      |
-| haptic          | string | **Optional** | Haptic feedback _success, warning, failure, light, medium, heavy, selection_ | `none`      |
-| repeat          | number | **Optional** | How often to repeat the `hold_action` in milliseconds.                                                                                 | `none`       |
+Currently, card is the only supported element. Each field of the card is interpreted as javascript
+code if it's surrounded by tripple brackets `[[[ ... ]]]`.
 
-## Starting a new card from boilerplate-card
+### Entity
 
-### Step 1
+Optional `entity id` that can be used as a named variable inside the javascript code
 
-Click the "Use this template" button on the main page and clone the new repository to your machine
+### Triggers
 
-### Step 2
+By default, `custom:template-card` will look in your javascript code and will extract all entities
+that triggers updates. Otherwise, you can specify one or more entities which will trigger the update.
+You can also use `all` as value to trigger updates at any change in Home Assystant.
 
-Install necessary modules (verified to work in node 8.x)
-`yarn install` or `npm install`
+### Variables
 
-### Step 3
+Variables are optional keys which can contain javascript code and can be refrenced in other fields by
+prefixing them with `variables`. Please note that variables can refer in javascript code other
+variables as long as they are declared previously.
 
-Do a test lint & build on the project. You can see available scripts in the package.json
-`npm run build`
+### Templates
 
-### Step 4
+Templates are partial definitions of `custom:template-card` that can be merged. You can specify one or more
+templates at the beginning of your yaml file under the special record `template_card_templates`.
 
-Search the repository for all instances of "TODO" and handle the changes/suggestions
+### Example
 
-### Step 5
-
-Customize to suit your needs and contribute it back to the community
-
-## Starting a new card from boilerplate-card with [devcontainer][devcontainer]
-
-Note: this is available only in vscode ensure you have the [Remote Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension installed.
-
-1. Fork and clone the repository.
-2. Open a [devcontainer][devcontainer] terminal and run `npm start` when it's ready.
-3. The compiled `.js` file will be accessible on
-   `http://127.0.0.1:5000/boilerplate-card.js`.
-4. On a running Home Assistant installation add this to your Lovelace
-   `resources:`
-
-```yaml
-- url: 'http://127.0.0.1:5000/boilerplate-card.js'
-  type: module
 ```
 
-_Change "127.0.0.1" to the IP of your development machine._
+type: custom:template_card
+entity: climate.living_room_ac
+card:
+  type: tile
+  entity: "[[[ return entity.entity_id; ]]]
+  name: "[[[ return entity.attributes.friendly_name ?? 'Unknown'; ]]]
 
-### Bonus
-
-If you need a fresh test instance you can install a fresh Home Assistant instance inside the devcontainer as well.
-
-1. Run the command `container start`.
-2. Home Assistant will install and will eventually be running on port `9123`
-
-## [Troubleshooting](https://github.com/thomasloven/hass-config/wiki/Lovelace-Plugins)
-
-NB This will not work with node 9.x if you see the following errors try installing node 8.10.0
-
-```yarn install
-yarn install v1.3.2
-[1/4] 🔍  Resolving packages...
-warning rollup-plugin-commonjs@10.1.0: This package has been deprecated and is no longer maintained. Please use @rollup/plugin-commonjs.
-[2/4] 🚚  Fetching packages...
-error @typescript-eslint/eslint-plugin@2.6.0: The engine "node" is incompatible with this module. Expected version "^8.10.0 || ^10.13.0 || >=11.10.1".
-error Found incompatible module
-info Visit https://yarnpkg.com/en/docs/cli/install for documentation about this command.
 ```
 
-[commits-shield]: https://img.shields.io/github/commit-activity/y/custom-cards/boilerplate-card.svg?style=for-the-badge
-[commits]: https://github.com/custom-cards/boilerplate-card/commits/master
+## Templating
+
+Templates must be defined at the beginning of the yaml file (or in the raw configuration editor in UI mode)
+under special key `template_card_templates`
+
+### Example
+
+```
+template_card_templates:
+  defaults:
+    variables:
+      default_name: "[[[ return entity.attributes.friendly_name; ]]] 
+      default_icon: "[[[ return entity.attributes.icon; ]]] 
+
+  some_card:
+    templates:
+    - defaults
+    card:
+      type: tile
+      entity: "[[[ return entity.entity_id; ]]]"
+      name: "[[[ return variables.default_name; ]]]"
+      icon: "[[[ return variables.default_icon; ]]]"
+
+```
+
+Later you can create a template card using the above template(s). Please note that the second template (`some_card`)
+already reference template `defaults`
+
+```
+type:custom:template-card
+template: some_card
+```
+
+
+[commits-shield]: https://img.shields.io/github/commit-activity/y/rumbu13/template-card.svg?style=for-the-badge
+[commits]: https://github.com/rumbu13/template-card/commits/master
 [devcontainer]: https://code.visualstudio.com/docs/remote/containers
-[discord]: https://discord.gg/5e9yvq
-[discord-shield]: https://img.shields.io/discord/330944238910963714.svg?style=for-the-badge
-[forum-shield]: https://img.shields.io/badge/community-forum-brightgreen.svg?style=for-the-badge
-[forum]: https://community.home-assistant.io/c/projects/frontend
-[license-shield]: https://img.shields.io/github/license/custom-cards/boilerplate-card.svg?style=for-the-badge
 [maintenance-shield]: https://img.shields.io/maintenance/yes/2021.svg?style=for-the-badge
-[releases-shield]: https://img.shields.io/github/release/custom-cards/boilerplate-card.svg?style=for-the-badge
-[releases]: https://github.com/custom-cards/boilerplate-card/releases
+[releases-shield]: https://img.shields.io/github/release/rumbu13/template-card.svg?style=for-the-badge
+[releases]: https://github.com/rumbu13/template-card/releases
