@@ -24,9 +24,11 @@
     "@material/mwc-select": "^0.25.3",
     "@material/mwc-switch": "^0.25.3",
     "@material/mwc-textfield": "^0.25.3",
+    "build-release": "^1.0.18",
     "custom-card-helpers": "^1.7.2",
     "deep-clone-simple": "^1.1.1",
     "home-assistant-js-websocket": "^5.11.1",
+    "js": "^0.1.0",
     "lit": "^2.0.0"
   },
   "devDependencies": {

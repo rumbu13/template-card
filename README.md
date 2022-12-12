@@ -3,7 +3,7 @@
 Teamplate them all!
 
 [![GitHub Release][releases-shield]][releases]
-[![License][license-shield]](LICENSE.md)
+[![License][license-shield]](LICENSE)
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg?style=for-the-badge)](https://github.com/custom-components/hacs)
 
 ![Project Maintenance][maintenance-shield]
@@ -16,7 +16,6 @@ Hey dude! Help me out for a couple of :beers: or a :coffee:!
 [![coffee](https://www.buymeacoffee.com/assets/img/custom_images/black_img.png)](https://www.buymeacoffee.com/rumbuT)
 
 ## Options
-
 
 | Name              | Type      | Requirement  | Description                                 |
 | ----------------- | --------- | ------------ | ------------------------------------------- |
@@ -144,6 +143,6 @@ template: some_card
 
 [commits-shield]: https://img.shields.io/github/commit-activity/y/rumbu13/template-card.svg?style=for-the-badge
 [commits]: https://github.com/rumbu13/template-card/commits/master
-[maintenance-shield]: https://img.shields.io/maintenance/yes/2021.svg?style=for-the-badge
+[maintenance-shield]: https://img.shields.io/maintenance/yes/2023.svg?style=for-the-badge
 [releases-shield]: https://img.shields.io/github/release/rumbu13/template-card.svg?style=for-the-badge
 [releases]: https://github.com/rumbu13/template-card/releases

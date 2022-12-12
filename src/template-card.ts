@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { LitElement, html, TemplateResult, PropertyValues} from 'lit';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { customElement, property, state } from 'lit/decorators';
 import deepClone from 'deep-clone-simple';
 import { HomeAssistant, getLovelace, LovelaceCard } from 'custom-card-helpers'
@@ -22,6 +23,7 @@ console.info(
 });
 
 @customElement('template-card')
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export class TemplateCard extends LitElement {
  
   @state() private _config?: TemplateCardConfig;
@@ -258,6 +260,7 @@ export class TemplateCard extends LitElement {
 
 }
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function deepMerge(...objects: any): any {
   const isObject = (obj: any) => obj && typeof obj === 'object';
 
