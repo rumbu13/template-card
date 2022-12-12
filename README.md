@@ -17,6 +17,7 @@ Hey dude! Help me out for a couple of :beers: or a :coffee:!
 
 ## Options
 
+| ----------------- | --------- | ------------ | ------------------------------------------- |
 | Name              | Type      | Requirement  | Description                                 |
 | ----------------- | ------- - | ------------ | ------------------------------------------- |
 | type              | string    | **Required** | `custom:template-card`                      |
