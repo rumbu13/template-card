@@ -17,36 +17,40 @@ Hey dude! Help me out for a couple of :beers: or a :coffee:!
 
 ## Options
 
-| Name              | Type    | Requirement  | Description                                 |
-| ----------------- | ------- | ------------ | ------------------------------------------- |
-| type              | string  | **Required** | `custom:template-card`                      |
-| card              | object  | **Required** | Card name                                   |
-| entity            | string  | **Optional** | This can be used as variable `entity`       |
-| triggers          | string[]| **Optional** | Show what a warning looks like for the card |
-| variables         | string[]| **Optional** | These can be used as `variables.name`       |
-| templates         | string[]| **Optional** | Inherited templates                         |
+| Name              | Type      | Requirement  | Description                                 |
+| ----------------- | ------- - | ------------ | ------------------------------------------- |
+| type              | string    | **Required** | `custom:template-card`                      |
+| card              | object    | **Required** | Card to be templated                        |
+| entity            | string    | **Optional** | Accesible in code as `entity`               |
+| triggers          | string[]  | **Optional** | Entity list triggering updates              |
+| variables         | dictionary| **Optional** | Accessible in code as `variables'           |
+| templates         | string[]  | **Optional** | Inherited merged templates                  |
 
 ## Card
 
 Currently, card is the only supported element. Each field of the card is interpreted as javascript
 code if it's surrounded by tripple brackets `[[[ ... ]]]`.
 
+```yaml
+card:
+  type: 'vertical-stack'
+```
+
 ### Entity
 
 Optional `entity_id` that can be used as a named variable inside the javascript code
 
 ```yaml
-card:
-  type: '....'
-  ...
+entity: climate.bedroom_thermostat
+
 ```
 
 ### Triggers
 
-By default, `custom:template-card` will look in your javascript code and will extract all entities
+By default, `custom:template-card` will look into your javascript code and will extract all entities
 that triggers updates. Otherwise, you can specify one or more entities which will trigger the update.
-You can also use `all` as value to trigger updates at any change in Home Assistant. The entity above
-is automatically considered for updates.
+You can also use `all` as value to trigger updates at any change in Home Assistant. The `entity` field
+is automatically considered for updates, there is no need to include it explicitely.
 
 ```yaml
 triggers: light.smart_bulb
@@ -68,8 +72,6 @@ Variables are optional keys which can contain javascript code and can be refrenc
 prefixing them with `variables`. Please note that variables can refer in javascript code other
 variables as long as they are declared previously.
 
-
-
 ```yaml
 variables:
   v1: simple string
@@ -79,7 +81,10 @@ variables:
 ### Templates
 
 Templates are partial definitions of `custom:template-card` that can be merged. You can specify one or more
-templates at the beginning of your yaml file under the special record `template_card_templates`.
+templates at the beginning of your yaml file under the special record `template_card_templates`. Please note
+that order is important, the last template wins if there are common fields in several templates. Order is also
+important when referencing variables: variables from the last template can reference variables from previous
+template, but not the other way.
 
 ```yaml
 templates: my_super_button
@@ -93,23 +98,21 @@ templates:
 
 ### Example
 
-```
+```yaml
 
 type: custom:template_card
 entity: climate.living_room_ac
 card:
   type: tile
-  entity: "[[[ return entity.entity_id; ]]]
-  name: "[[[ return entity.attributes.friendly_name ?? 'Unknown'; ]]]
+  entity: "[[[ return entity.entity_id; ]]]"
+  name: "[[[ return entity.attributes.friendly_name ?? 'Unknown'; ]]]"
 
 ```
 
 ## Templating
 
 Templates must be defined at the beginning of the yaml file (or in the raw configuration editor in UI mode)
-under special key `template_card_templates`
-
-### Example
+under the special key `template_card_templates`
 
 ```yaml
 
@@ -138,10 +141,8 @@ type: custom:template-card
 template: some_card
 ```
 
-
 [commits-shield]: https://img.shields.io/github/commit-activity/y/rumbu13/template-card.svg?style=for-the-badge
 [commits]: https://github.com/rumbu13/template-card/commits/master
-[devcontainer]: https://code.visualstudio.com/docs/remote/containers
 [maintenance-shield]: https://img.shields.io/maintenance/yes/2021.svg?style=for-the-badge
 [releases-shield]: https://img.shields.io/github/release/rumbu13/template-card.svg?style=for-the-badge
 [releases]: https://github.com/rumbu13/template-card/releases
