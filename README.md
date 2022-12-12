@@ -25,6 +25,7 @@ Hey dude! Help me out for a couple of :beers: or a :coffee:!
 | triggers          | string[]  | **Optional** | Entity list triggering updates              |
 | variables         | dictionary| **Optional** | Accessible in code as `variables'           |
 | templates         | string[]  | **Optional** | Inherited merged templates                  |
+| ----------------- | --------- | ------------ | ------------------------------------------- |
 
 ## Card
 
