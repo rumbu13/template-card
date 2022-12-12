@@ -1,6 +1,6 @@
 # Template Card by [@rumbu13](https://www.github.com/rumbu13)
 
-A community driven template of best practices for Home Assistant Lovelace custom cards
+Teamplate them all!
 
 [![GitHub Release][releases-shield]][releases]
 [![License][license-shield]](LICENSE.md)
@@ -33,13 +33,34 @@ code if it's surrounded by tripple brackets `[[[ ... ]]]`.
 
 ### Entity
 
-Optional `entity id` that can be used as a named variable inside the javascript code
+Optional `entity_id` that can be used as a named variable inside the javascript code
+
+```yaml
+card:
+  type: '....'
+  ...
+```
 
 ### Triggers
 
 By default, `custom:template-card` will look in your javascript code and will extract all entities
 that triggers updates. Otherwise, you can specify one or more entities which will trigger the update.
-You can also use `all` as value to trigger updates at any change in Home Assystant.
+You can also use `all` as value to trigger updates at any change in Home Assistant. The entity above
+is automatically considered for updates.
+
+```yaml
+triggers: light.smart_bulb
+```
+
+```yaml
+triggers:
+- binary_sensor.bedroom_door_contact
+- binary_sensor.bedroom_motion
+```
+
+```yaml
+triggers: all
+```
 
 ### Variables
 
@@ -47,10 +68,28 @@ Variables are optional keys which can contain javascript code and can be refrenc
 prefixing them with `variables`. Please note that variables can refer in javascript code other
 variables as long as they are declared previously.
 
+
+
+```yaml
+variables:
+  v1: simple string
+  v2: "[[[ return variables.v1; ]]]
+```
+
 ### Templates
 
 Templates are partial definitions of `custom:template-card` that can be merged. You can specify one or more
 templates at the beginning of your yaml file under the special record `template_card_templates`.
+
+```yaml
+templates: my_super_button
+```
+
+```yaml
+templates:
+- my_super_button
+- translated_values
+```
 
 ### Example
 
@@ -72,12 +111,13 @@ under special key `template_card_templates`
 
 ### Example
 
-```
+```yaml
+
 template_card_templates:
   defaults:
     variables:
-      default_name: "[[[ return entity.attributes.friendly_name; ]]] 
-      default_icon: "[[[ return entity.attributes.icon; ]]] 
+      default_name: "[[[ return entity.attributes.friendly_name; ]]]"
+      default_icon: "[[[ return entity.attributes.icon; ]]]" 
 
   some_card:
     templates:
@@ -93,8 +133,8 @@ template_card_templates:
 Later you can create a template card using the above template(s). Please note that the second template (`some_card`)
 already reference template `defaults`
 
-```
-type:custom:template-card
+```yaml
+type: custom:template-card
 template: some_card
 ```
 
