@@ -71,18 +71,19 @@ triggers: all
 
 Variables are optional keys which can contain javascript code and can be refrenced in other fields by
 prefixing them with `variables`. Please note that variables can refer in javascript code other
-variables as long as they are declared previously. Also, variables can access teh entity field simply by `entity`
+variables as long as they are declared previously. Also, variables can access the entity field simply by `entity`.
 
 ```yaml
 variables:
   v1: simple string
-  v2: "[[[ return variables.v1; ]]]
+  v2: "[[[ return variables.v1; ]]]"
+  v3: "[[[ return entity.attributes.icon; ]]]"
 ```
 
 ### Templates
 
 Templates are partial definitions of `custom:template-card` that can be merged. You can specify one or more
-templates at the beginning of your yaml file under the special record `template_card_templates`. Please note
+templates at the beginning of your yaml file under the special key `template_card_templates`. Please note
 that order is important, the last template wins if there are common fields in several templates. Order is also
 important when referencing variables: variables from the last template can reference variables from previous
 template, but not the other way.
@@ -116,7 +117,7 @@ When writing javascript code, the following variables are available:
 
 - `hass` - Home Assistant object containing all configuration, states, user settings, etc.
 - `states` - Current states of entities.
-- `user' - Current user.
+- `user` - Current user.
 - `entity` - Context dependent, any object containing a entity key will have access to the
   corresponding entity through this variable.
 
@@ -130,10 +131,11 @@ variables:
 card:
   type: custom:mushroom-entity-card
   entity: sensor.y
-  name: "[[[ return entity?.state * 100; ]]]
+  name: "[[[ return entity?.state * 100; ]]]"
 ```
 
 In the first case. `entity` will refer to `sensor.x`, in the second case, it will refer to `sensor.y`.
+Any entity can reference the previous one in the configuration.
 
 
 ## Templating
@@ -161,7 +163,7 @@ template_card_templates:
 ```
 
 Later you can create a template card using the above template(s). Please note that the second template (`some_card`)
-already reference template `defaults`
+already references template `defaults`
 
 ```yaml
 type: custom:template-card
