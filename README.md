@@ -38,7 +38,8 @@ card:
 
 ### Entity
 
-Optional `entity_id` that can be used as a named variable inside the javascript code
+Optional `entity_id` that can be used as a named variable inside the javascript code. The entity field
+can contain javascript code but cannot reference variables.
 
 ```yaml
 entity: climate.bedroom_thermostat
@@ -70,7 +71,7 @@ triggers: all
 
 Variables are optional keys which can contain javascript code and can be refrenced in other fields by
 prefixing them with `variables`. Please note that variables can refer in javascript code other
-variables as long as they are declared previously.
+variables as long as they are declared previously. Also, variables can access teh entity field simply by `entity`
 
 ```yaml
 variables:
@@ -108,6 +109,32 @@ card:
   name: "[[[ return entity.attributes.friendly_name ?? 'Unknown'; ]]]"
 
 ```
+
+## Predefined variables
+
+When writing javascript code, the following variables are available:
+
+- `hass` - Home Assistant object containing all configuration, states, user settings, etc.
+- `states` - Current states of entities.
+- `user' - Current user.
+- `entity` - Context dependent, any object containing a entity key will have access to the
+  corresponding entity through this variable.
+
+Given the following object:
+
+```yaml
+type: custom:template-card
+entity: sensor.x
+variables:
+  var: "[[[ return entity?.state; ]]]"
+card:
+  type: custom:mushroom-entity-card
+  entity: sensor.y
+  name: "[[[ return entity?.state * 100; ]]]
+```
+
+In the first case. `entity` will refer to `sensor.x`, in the second case, it will refer to `sensor.y`.
+
 
 ## Templating
 

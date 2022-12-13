@@ -1,0 +1,10 @@
+{
+    "configurations": [
+        {
+            "type": "chrome",
+            "name": "http://ha:8123/serenity-yaml",
+            "request": "launch",
+            "url": "http://ha:8123/serenity-yaml"
+        }
+    ]
+}
