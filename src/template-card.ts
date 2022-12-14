@@ -3,7 +3,7 @@ import { LitElement, html, TemplateResult, PropertyValues} from 'lit';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { customElement, property, state } from 'lit/decorators';
 import deepClone from 'deep-clone-simple';
-import { HomeAssistant, getLovelace, LovelaceCard, createThing, LovelaceCardConfig } from 'custom-card-helpers'
+import { HomeAssistant, getLovelace, LovelaceCard, createThing, computeCardSize } from 'custom-card-helpers'
 
 import type { TemplateCardConfig } from './types';
 import { CARD_VERSION } from './const';
@@ -22,26 +22,19 @@ console.info(
   description: 'Template them!',
 });
 
-const helpers = (window as any).loadCardHelpers ? (window as any).loadCardHelpers() : undefined;
+const helpers = (window as any).loadCardHelpers ?  (window as any).loadCardHelpers() : undefined;
 
 @customElement('template-card')
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export class TemplateCard extends LitElement {
  
   @state() private _config?: TemplateCardConfig;  
-  @state() private _card? : LovelaceCard;
-  @state() private _hass? : HomeAssistant;
+  @property({attribute: false}) public hass? : HomeAssistant;
 
   private _variables: any | undefined;
   private _entity: any | undefined;  
   private _updateEntities: string[] = [];
-
-  set hass(hass: HomeAssistant) {
-    this._hass = hass;
-    if (this._card) {
-      this._card.hass = hass;
-    }      
-  }
+  private _helpers: any;
 
   public setConfig(config: TemplateCardConfig) {
     if (!config)
@@ -50,20 +43,18 @@ export class TemplateCard extends LitElement {
     const lovelace = getLovelace() || getLovelaceCast();
     let templates: TemplateCardConfig = deepClone(config);
     templates = this._configTemplates(lovelace, templates);
-    
     this._config = templates;
-
-    if (!config.card)
+    if (!this._config.card)
       throw new Error('Missing card');
-    
 
+    this._loadCardHelpers();  
   }  
 
 
+
   protected render(): TemplateResult | void {
-
-
-    if (!this._hass || !this._config) {
+    
+    if (!this.hass || !this._config || !this._helpers) {
       return html``;
     }
 
@@ -74,10 +65,14 @@ export class TemplateCard extends LitElement {
     cardConfig = this._evaluateObject(cardConfig, this._entity);
         
     let card = this._config.card;
-    card = createThing(cardConfig);
+    if (helpers) {
+      card = this._helpers.createCardElement(cardConfig);
+    } else {
+      card = createThing(cardConfig);
+    }
 
     if (card) {
-      card.hass = this._hass;
+      card.hass = this.hass;
 
       return html`
         <div id="template-card">
@@ -100,10 +95,10 @@ export class TemplateCard extends LitElement {
     if (this._config) {
       if (typeof this._config.triggers === 'string' && this._config.triggers === 'all')
         return true;
-      const oldHass = changedProps.get('_hass') as HomeAssistant | undefined;
+      const oldHass = changedProps.get('hass') as HomeAssistant | undefined;
       if (oldHass) {
         for (const updateEntity of this._updateEntities) {
-          if (oldHass.states[updateEntity] !== this._hass?.states[updateEntity]) {
+          if (oldHass.states[updateEntity] !== this.hass?.states[updateEntity]) {
             return true;
           }          
         }
@@ -115,7 +110,12 @@ export class TemplateCard extends LitElement {
 
 
   public getCardSize(): number | Promise<number> {
-    return this._card && typeof this._card.getCardSize === 'function' ? this._card.getCardSize() : 1;
+    const card = this.shadowRoot?.querySelector('#card > *') as LovelaceCard;
+    return card ? computeCardSize(card) : 1;
+  }
+
+  private async _loadCardHelpers(): Promise<void> {
+    this._helpers = await (window as any).loadCardHelpers();
   }
 
   private _evaluateVariables(entity: any) {
@@ -130,7 +130,7 @@ export class TemplateCard extends LitElement {
   private _evaluateEntity() {
     this._entity = undefined;
     if (this._config?.entity)
-      this._entity = this._hass?.states[this._evaluateObject(this._config.entity, null)];
+      this._entity = this.hass?.states[this._evaluateObject(this._config.entity, null)];
   }
 
 
@@ -142,7 +142,7 @@ export class TemplateCard extends LitElement {
     this._entity = undefined;
     this._updateEntities = [];    
 
-    if (this._hass) {
+    if (this.hass) {
       this._evaluateTriggers();
       this._evaluateEntity();
       this._evaluateVariables(this._entity);
@@ -179,7 +179,7 @@ export class TemplateCard extends LitElement {
   private _evaluateObject(obj: any, entity: any): any {
 
     const newEntityId = this._evaluateJS(obj?.['entity'], entity);
-    const newEntity = this._hass?.states[newEntityId] ?? entity;
+    const newEntity = this.hass?.states[newEntityId] ?? entity;
     if (newEntityId) {
       obj['entity'] = newEntityId;
     }    
@@ -231,9 +231,9 @@ export class TemplateCard extends LitElement {
       return new Function('states', 'user', 'hass', 'entity', 'variables', 'html', 
         `'use strict'; ${js.substring(3, js.length - 3)}`).call(
         this,
-        this._hass?.states,
-        this._hass?.user,
-        this._hass,
+        this.hass?.states,
+        this.hass?.user,
+        this.hass,
         entity,
         this._variables,
         html
@@ -244,6 +244,7 @@ export class TemplateCard extends LitElement {
   }
 
   private _configTemplates(lovelace: any, config: any) : TemplateCardConfig {
+       
     if (!config?.templates)
       return config;
 

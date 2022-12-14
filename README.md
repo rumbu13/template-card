@@ -9,11 +9,37 @@ Teamplate them all!
 ![Project Maintenance][maintenance-shield]
 [![GitHub Activity][commits-shield]][commits]
 
+[![everything]]
+
 ## Support
 
 Hey dude! Help me out for a couple of :beers: or a :coffee:!
 
 [![coffee](https://www.buymeacoffee.com/assets/img/custom_images/black_img.png)](https://www.buymeacoffee.com/rumbuT)
+
+## At a glance
+
+```yaml
+type: custom:template-card
+templates:
+- default_name
+- default_icon
+variables:
+  is_door_open: "[[[ return states['binary_sensor.bedroom_door_contact'].state == 'on' ] ]]]"
+  current_user:  "[[[ return user.name; ]]]"
+triggers:
+- climate.bedroom_thermostat
+- binary_sensor.bedroom_door_contact
+card:
+  type: thermostat
+  entity: climate.bedroom_thermostat
+  name: >-
+    [[[ 
+      return variables.is_door_open && entity?.state == 'heat' ? 
+        `${variables.current_user}, please close the door, wasting energy` : 
+        variables.default_name; 
+    ]]]
+```
 
 ## Options
 
@@ -70,7 +96,7 @@ triggers: all
 ### Variables
 
 Variables are optional keys which can contain javascript code and can be refrenced in other fields by
-prefixing them with `variables`. Please note that variables can refer in javascript code other
+prefixing them with `variables`. Please note that variables can refer in javascript code to other
 variables as long as they are declared previously. Also, variables can access the entity field simply by `entity`.
 
 ```yaml
@@ -115,28 +141,53 @@ card:
 
 When writing javascript code, the following variables are available:
 
-- `hass` - Home Assistant object containing all configuration, states, user settings, etc.
-- `states` - Current states of entities.
-- `user` - Current user.
-- `entity` - Context dependent, any object containing a entity key will have access to the
-  corresponding entity through this variable.
+| Name        | Type       | Description                                                                              |
+| ----------- | ---------- | ---------------------------------------------------------------------------------------- |
+| `hass`      | object     | The [hass](https://developers.home-assistant.io/docs/frontend/data/) object              |
+| `states`    | object     | The [states](https://developers.home-assistant.io/docs/frontend/data/#hassstates) object |
+| `user`      | string     | The [user](https://developers.home-assistant.io/docs/frontend/data/#hassuser) object     |
+| `variables` | dictionary | Defined by `variables` configuration                                                     |
+| `entity`    | string     | Context dependent, last entity set in configuration                                      |
 
-Given the following object:
+Given the following configuration:
 
 ```yaml
 type: custom:template-card
 entity: sensor.x
 variables:
-  var: "[[[ return entity?.state; ]]]"
+  var: "[[[ return entity?.entity_id; ]]]"
 card:
   type: custom:mushroom-entity-card
   entity: sensor.y
-  name: "[[[ return entity?.state * 100; ]]]"
+  name: "[[[ return entity?.entity_id; ]]]"
 ```
 
-In the first case. `entity` will refer to `sensor.x`, in the second case, it will refer to `sensor.y`.
-Any entity can reference the previous one in the configuration.
+In the first case. `entity` will refer to `sensor.x`, in the second case, it will refer to `sensor.y`,
+therefore `var` will be set to 'sensor.x' and `name` will be set to 'sensor.y'.
 
+Any entity can reference the previous one in the configuration:
+
+```yaml
+type: custom:template-card
+entity: sensor.x
+card:
+  # reference to previous entity (sensor.x)
+  entity: "[[[ return entity?.entity_id; ]]]"  
+```
+
+There is no need to declare `entity` field before using it, `entity` is evaluated first in any object:
+
+```yaml
+type: custom:template-card
+variables:
+  #var will use sensor.x
+  var: "[[[ return entity?.entity_id; ]]]"
+entity: sensor.x
+card:  
+  # name will use sensor.y
+  name: "[[[ return entity?.entity_id; ]]]"
+  entity: sensor.y
+```
 
 ## Templating
 
@@ -162,12 +213,13 @@ template_card_templates:
 
 ```
 
-Later you can create a template card using the above template(s). Please note that the second template (`some_card`)
+Later, you can create a template card using the above template(s). Please note that the second template (`some_card`)
 already references template `defaults`
 
 ```yaml
 type: custom:template-card
 template: some_card
+#content of defaults and some_card is added here automatically
 ```
 
 [commits-shield]: https://img.shields.io/github/commit-activity/y/rumbu13/template-card.svg?style=for-the-badge
@@ -175,3 +227,4 @@ template: some_card
 [maintenance-shield]: https://img.shields.io/maintenance/yes/2023.svg?style=for-the-badge
 [releases-shield]: https://img.shields.io/github/release/rumbu13/template-card.svg?style=for-the-badge
 [releases]: https://github.com/rumbu13/template-card/releases
+[everything]: https://imgflip.com/i/74992e
