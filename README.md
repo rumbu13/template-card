@@ -219,10 +219,9 @@ template: some_card
 #content of defaults and some_card is added here automatically
 ```
 
-[commits-shield]: hhttps://img.shields.io/github/commit-activity/m/rumbu13/template-card?style=for-the-badge
+[commits-shield]: https://img.shields.io/github/commit-activity/m/rumbu13/template-card?style=for-the-badge
 [commits]: https://github.com/rumbu13/template-card/commits/master
 [maintenance-shield]: https://img.shields.io/maintenance/yes/2023.svg?style=for-the-badge
 [releases-shield]: https://img.shields.io/github/release/rumbu13/template-card.svg?style=for-the-badge
 [releases]: https://img.shields.io/github/v/release/rumbu13/template-card?include_prereleases&style=for-the-badge
 [license-shield]: https://img.shields.io/github/license/rumbu13/template-card?style=for-the-badge
-
