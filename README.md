@@ -5,11 +5,8 @@ Teamplate them all!
 [![GitHub Release][releases-shield]][releases]
 [![License][license-shield]](LICENSE)
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg?style=for-the-badge)](https://github.com/custom-components/hacs)
-
 ![Project Maintenance][maintenance-shield]
 [![GitHub Activity][commits-shield]][commits]
-
-[![everything]]
 
 ## Support
 
@@ -222,9 +219,10 @@ template: some_card
 #content of defaults and some_card is added here automatically
 ```
 
-[commits-shield]: https://img.shields.io/github/commit-activity/y/rumbu13/template-card.svg?style=for-the-badge
+[commits-shield]: hhttps://img.shields.io/github/commit-activity/m/rumbu13/template-card?style=for-the-badge
 [commits]: https://github.com/rumbu13/template-card/commits/master
 [maintenance-shield]: https://img.shields.io/maintenance/yes/2023.svg?style=for-the-badge
 [releases-shield]: https://img.shields.io/github/release/rumbu13/template-card.svg?style=for-the-badge
-[releases]: https://github.com/rumbu13/template-card/releases
-[everything]: https://imgflip.com/i/74992e
+[releases]: https://img.shields.io/github/v/release/rumbu13/template-card?include_prereleases&style=for-the-badge
+[license-shield]: https://img.shields.io/github/license/rumbu13/template-card?style=for-the-badge
+
